@@ -1,0 +1,30 @@
+---
+
+aws_region: "eu-west-2"
+ssh_key: "aws_london_mac"
+ami_id: "ami-dff017b8"
+
+vpc_name: "Demo"
+vpc_cidr_block: "10.0.0.0/16"
+
+subnet_1_cidr: "10.0.0.0/24"
+subnet_1_name: "DMZ"
+subnet_1_number: "1"
+subnet_1_public: "true"
+
+subnet_2_cidr: "10.0.3.0/24"
+subnet_2_name: "Internal"
+subnet_2_number: "2"
+
+subnet_3_cidr: "10.0.6.0/24"
+subnet_3_name: "Secure"
+subnet_3_number: "3"
+
+sg_1_name: "DMZ"
+sg_1_desc: "Security group for DMZ"
+
+sg_2_name: "Internal"
+sg_2_desc: "Security group for Internal"
+
+sg_3_name: "Secure"
+sg_3_desc: "Security group for Secure"

@@ -1,0 +1,13 @@
+---
+
+- name: Create Internet Gateway
+  ec2_vpc_igw:
+    region: "{{ aws_region }}"
+    vpc_id: "{{ vpc_id }}"
+    tags:
+      Name: "Demo"
+    state: present
+  register: igw
+
+- set_fact:
+    igw_id: "{{ igw.gateway_id }}"

@@ -1,0 +1,16 @@
+---
+
+- name: Create VPC
+  ec2_vpc_net:
+    region: "{{ aws_region }}"
+    name: "{{ vpc_name }}"
+    cidr_block: "{{ vpc_cidr_block }}"
+    dns_hostnames: true
+    state: present
+  register: vpc
+
+- name: Set VPC ID in variable
+  set_fact:
+    vpc_id: "{{ vpc.vpc.id }}"
+
+- debug: var=vpc_id

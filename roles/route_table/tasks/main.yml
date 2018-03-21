@@ -1,0 +1,36 @@
+---
+
+- name: Create and set up {{ subnet_name }} subnet route table
+  ec2_vpc_route_table:
+    region: "{{ aws_region }}"
+    vpc_id: "{{ vpc_id }}"
+    subnets:
+      - "{{ subnet_id }}"
+    routes:
+      - dest: 0.0.0.0/0
+        gateway_id: "{{ gw_id }}"
+    tags:
+      Name: "{{ subnet_name }}"
+    state: present
+  when: gw_id is defined
+  register: route_table
+
+- set_fact:
+    route_{{ subnet_name | lower }}_id: "{{ route_table.route_table.id }}"
+  when: gw_id is defined
+
+- name: Create and set up {{ subnet_name }} subnet route table
+  ec2_vpc_route_table:
+    region: "{{ aws_region }}"
+    vpc_id: "{{ vpc_id }}"
+    subnets:
+      - "{{ subnet_id }}"
+    tags:
+      Name: "{{ subnet_name }}"
+    state: present
+  when: gw_id is not defined
+  register: route_table
+
+- set_fact:
+    route_{{ subnet_name | lower }}_id: "{{ route_table.route_table.id }}"
+  when: gw_id is not defined

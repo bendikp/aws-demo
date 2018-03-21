@@ -1,0 +1,59 @@
+---
+
+- name: Find my ip
+  command:
+    curl -s ipinfo.io/ip
+  register: my_ip
+  changed_when: false
+
+- name: Create Rules in {{ sg_1_name }} Security Group
+  ec2_group:
+    region: "{{ aws_region }}"
+    vpc_id: "{{ vpc_id }}"
+    name: "{{ sg_1_name }}"
+    description: "{{ sg_1_desc }}"
+    rules:
+      - proto: tcp
+        from_port: 0
+        to_port: 65535
+        group_name: "{{ sg_1_name }}"
+      - proto: tcp
+        ports:
+          - 22
+          - 8080
+        cidr_ip: "{{ my_ip.stdout }}/32"
+    state: present
+
+- name: Create Rules in {{ sg_2_name }} Security Group
+  ec2_group:
+    region: "{{ aws_region }}"
+    vpc_id: "{{ vpc_id }}"
+    name: "{{ sg_2_name }}"
+    description: "{{ sg_2_desc }}"
+    rules:
+      - proto: tcp
+        from_port: 0
+        to_port: 65535
+        group_name: "{{ sg_2_name }}"
+      - proto: tcp
+        ports:
+          - 22
+        group_name: "{{ sg_1_name }}"
+    state: present
+
+- name: Create Rules in {{ sg_3_name }} Security Group
+  ec2_group:
+    region: "{{ aws_region }}"
+    vpc_id: "{{ vpc_id }}"
+    name: "{{ sg_3_name }}"
+    description: "{{ sg_3_desc }}"
+    rules:
+      - proto: tcp
+        from_port: 0
+        to_port: 65535
+        group_name: "{{ sg_3_name }}"
+      - proto: tcp
+        ports:
+          - 22
+        group_name: "{{ sg_1_name }}"
+    state: present

@@ -1,0 +1,17 @@
+---
+
+- name: Create Subnet {{ subnet_name }}
+  ec2_vpc_subnet:
+    region: "{{ aws_region }}"
+    az: "{{ aws_region }}a"
+    vpc_id: "{{ vpc_id }}"
+    cidr: "{{ subnet_cidr }}"
+    map_public: "{{ subnet_public | default(false) }}"
+    tags:
+      Name: "{{ subnet_name }}"
+    state: present
+  register: subnet
+
+- set_fact:
+    sn_{{ subnet_number }}_id: "{{ subnet.subnet.id }}"
+
