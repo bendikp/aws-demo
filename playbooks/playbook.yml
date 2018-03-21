@@ -3,4 +3,88 @@
 - hosts: local
   roles:
     - vpc
-    - 
+    - igw
+  tasks:
+    - name: Subnet
+      include_role:
+        name: subnet
+      vars:
+        subnet_name: "{{ subnet_1_name }}"
+        subnet_cidr: "{{ subnet_1_cidr }}"
+        subnet_number: "{{ subnet_1_number }}"
+        subnet_public: "{{ subnet_1_public }}"
+
+    - name: Subnet
+      include_role:
+        name: subnet
+      vars:
+        subnet_name: "{{ subnet_2_name }}"
+        subnet_cidr: "{{ subnet_2_cidr }}"
+        subnet_number: "{{ subnet_2_number }}"
+
+    - name: Subnet
+      include_role:
+        name: subnet
+      vars:
+        subnet_name: "{{ subnet_3_name }}"
+        subnet_cidr: "{{ subnet_3_cidr }}"
+        subnet_number: "{{ subnet_3_number }}"
+
+    - name: NAT
+      include_role:
+        name: nat
+      vars:
+        subnet_id: "{{ sn_1_id }}"
+
+    - name: Route Table
+      include_role:
+        name: route_table
+      vars:
+        subnet_id: "{{ sn_1_id }}"
+        subnet_name: "{{ subnet_1_name }}"
+        gw_id: "{{ igw_id }}"
+
+    - name: Route Table
+      include_role:
+        name: route_table
+      vars:
+        subnet_id: "{{ sn_2_id }}"
+        subnet_name: "{{ subnet_2_name }}"
+        gw_id: "{{ nat_id }}"
+
+    - name: Route Table
+      include_role:
+        name: route_table
+      vars:
+        subnet_id: "{{ sn_3_id }}"
+        subnet_name: "{{ subnet_3_name }}"
+
+    - name: Security Group
+      include_role:
+        name: security_group
+      vars:
+        sg_name: "{{ sg_1_name }}"
+        sg_desc: "{{ sg_1_desc }}"
+
+    - name: Security Group
+      include_role:
+        name: security_group
+      vars:
+        sg_name: "{{ sg_2_name }}"
+        sg_desc: "{{ sg_2_desc }}"
+
+    - name: Security Group
+      include_role:
+        name: security_group
+      vars:
+        sg_name: "{{ sg_3_name }}"
+        sg_desc: "{{ sg_3_desc }}"
+    
+    - name: Security Group Rules
+      include_tasks: security_groups_rules.yml
+
+    - name: Instances
+      include_tasks: instances.yml
+    
+    - name: Create SSH config
+      include_tasks: ssh_config.yml

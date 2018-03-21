@@ -9,8 +9,5 @@
     state: present
   register: vpc
 
-- name: Set VPC ID in variable
-  set_fact:
+- set_fact:
     vpc_id: "{{ vpc.vpc.id }}"
-
-- debug: var=vpc_id

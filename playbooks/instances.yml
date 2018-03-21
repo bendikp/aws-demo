@@ -1,4 +1,53 @@
 ---
 
-- name: 
+- name: Create VM in {{ subnet_1_name }} subnet
   ec2:
+    region: "{{ aws_region }}"
+    vpc_subnet_id: "{{ sn_1_id }}"
+    group: "{{ sg_1_name }}"
+    key_name: "{{ ssh_key }}"
+    instance_type: t2.micro
+    image: "{{ ami_id }}"
+    instance_tags:
+      Name: "{{ subnet_1_name }}"    
+    wait: no
+    count: 1
+    assign_public_ip: yes
+  register: instance
+
+- set_fact:
+    vm_1_id: "{{ instance.instance_ids[0] }}"
+
+- name: Create VM in {{ subnet_2_name }} subnet
+  ec2:
+    region: "{{ aws_region }}"
+    vpc_subnet_id: "{{ sn_2_id }}"
+    group: "{{ sg_2_name }}"
+    key_name: "{{ ssh_key }}"
+    instance_type: t2.micro
+    image: "{{ ami_id }}"
+    instance_tags:
+      Name: "{{ subnet_2_name }}"    
+    wait: no
+    count: 1
+  register: instance
+
+- set_fact:
+    vm_2_id: "{{ instance.instance_ids[0] }}"
+
+- name: Create VM in {{ subnet_3_name }} subnet
+  ec2:
+    region: "{{ aws_region }}"
+    vpc_subnet_id: "{{ sn_3_id }}"
+    group: "{{ sg_3_name }}"
+    key_name: "{{ ssh_key }}"
+    instance_type: t2.micro
+    image: "{{ ami_id }}"
+    instance_tags:
+      Name: "{{ subnet_3_name }}"
+    wait: no
+    count: 1
+  register: instance
+  
+- set_fact:
+    vm_3_id: "{{ instance.instance_ids[0] }}"

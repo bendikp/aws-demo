@@ -1,0 +1,16 @@
+Host {{ vm_1_name }}
+  Hostname {{ vm_1_ip }}
+  IdentityFile ~/.ssh/{{ ssh_key }}.pem
+  User ec2-user
+
+Host {{ vm_2_name }}
+  Hostname {{ vm_2_ip }}
+  IdentityFile ~/.ssh/{{ ssh_key }}.pem
+  User ec2-user
+  ProxyCommand ssh {{ vm_1_name }} -W %h:%p
+
+Host {{ vm_3_name }}
+  Hostname {{ vm_3_ip }}
+  IdentityFile ~/.ssh/{{ ssh_key }}.pem
+  User ec2-user
+  ProxyCommand ssh {{ vm_1_name }} -W %h:%p

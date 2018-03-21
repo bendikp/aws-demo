@@ -1,0 +1,37 @@
+---
+
+- name: Get IP and name of instance
+  ec2_instance_facts:
+    instance_ids:
+      - "{{ vm_1_id }}"
+  register: instance_1
+
+- set_fact:
+    vm_1_ip: "{{ instance_1.instances[0].public_ip_address }}"
+    vm_1_name: "{{ instance_1.instances[0].tags.Name | lower }}"
+
+- name: Get IP and name of instance
+  ec2_instance_facts:
+    instance_ids:
+      - "{{ vm_2_id }}"
+  register: instance_2
+
+- set_fact:
+    vm_2_ip: "{{ instance_2.instances[0].private_ip_address }}"
+    vm_2_name: "{{ instance_2.instances[0].tags.Name | lower }}"
+
+- name: Get IP and name of instance
+  ec2_instance_facts:
+    instance_ids:
+      - "{{ vm_3_id }}"
+  register: instance_3
+
+- set_fact:
+    vm_3_ip: "{{ instance_3.instances[0].private_ip_address }}"
+    vm_3_name: "{{ instance_3.instances[0].tags.Name | lower }}"
+
+- name: Create ssh config file
+  template:
+    src: ssh_config.j2
+    dest: ~/.ssh/config
+    mode: "u=rw,g=r,o=r"
