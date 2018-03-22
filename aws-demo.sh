@@ -112,18 +112,3 @@ Host secure
   User ec2-user
   ProxyCommand ssh bastion -W %h:%p
 EOT
-
-
-#
-# Clean up
-# aws ec2 terminate-instances --instance-ids $VM3_ID $VM2_ID $VM1_ID
-# aws ec2 delete-nat-gateway --nat-gateway-id $NGW_ID
-# aws ec2 release-address --allocation-id $EIP_ID
-# aws ec2 detach-internet-gateway --internet-gateway-id $IGW_ID --vpc-id $VPC_ID
-# aws ec2 delete-vpc --vpc-id ${VPC_ID}
-# 
-
-
-# aws ec2 describe-vpcs | jq -r ".Vpcs[] | .VpcId"
-# aws ec2 describe-vpcs --vpc-ids ${VPC_ID}
-# aws ec2 terminate-instances --instance-ids $VM3_ID $VM2_ID $VM1_ID
