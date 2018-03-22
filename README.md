@@ -1,6 +1,16 @@
 # AWS-demo
 
-Simple demo to set up a VPC with a public and two private subnets. 
+Simple AWS demo to set up the following components in an AWS Region:
+* VPC 
+* Internet Gateway
+* Three Subnets
+* NAT Gateway
+* Route Tables
+* Security Groups
+* EC2 instance in each subnet
+* SSH-config to connet to EC2 instances
+
+
 
 ## Shell
 
