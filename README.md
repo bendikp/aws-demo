@@ -10,7 +10,7 @@ Simple AWS demo to set up the following components in an AWS Region:
 * EC2 instance in each subnet
 * SSH-config to connet to EC2 instances
 
-
+![Diagram](aws-diagram.pdf)
 
 ## Shell
 
