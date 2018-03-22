@@ -37,6 +37,12 @@ sudo pip install botocore --ignore-installed six
 ```
 
 ### Run
+Export AWS access key:
+```
+export AWS_ACCESS_KEY_ID=<key-id>
+export AWS_SECRET_ACCESS_KEY=<key>
+```
+Run Ansible playbook:
 ```
 ansible-playbook -i inventory playbooks/playbook.yml -e @vars.yml
 ```
