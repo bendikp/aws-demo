@@ -3,6 +3,10 @@
 ################################### AWS-demo ###################################
 ################################################################################
 
+# Choose AMI to deploy and SSH key pair to use 
+AMI_ID=ami-dff017b8
+SSH_KEY=aws_london_mac
+
 # Create and tag VPC:
 VPC_ID=$(aws ec2 create-vpc --cidr-block 10.0.0.0/16 | jq -r ".Vpc.VpcId")
 aws ec2 modify-vpc-attribute --vpc-id ${VPC_ID} --enable-dns-hostnames
@@ -78,15 +82,16 @@ aws ec2 authorize-security-group-ingress --group-id ${SG3_ID} --protocol tcp --p
 ################################################################################
 
 # Provision EC2-instances:
-VM1_ID=$(aws ec2 run-instances --image-id ami-dff017b8 --count 1 --instance-type t2.micro --key-name aws_london_mac --security-group-ids ${SG1_ID} --subnet-id ${SN1_ID} | jq -r ".Instances[0].InstanceId")
-VM2_ID=$(aws ec2 run-instances --image-id ami-dff017b8 --count 1 --instance-type t2.micro --key-name aws_london_mac --security-group-ids ${SG2_ID} --subnet-id ${SN2_ID} | jq -r ".Instances[0].InstanceId")
-VM3_ID=$(aws ec2 run-instances --image-id ami-dff017b8 --count 1 --instance-type t2.micro --key-name aws_london_mac --security-group-ids ${SG3_ID} --subnet-id ${SN3_ID} | jq -r ".Instances[0].InstanceId")
+VM1_ID=$(aws ec2 run-instances --image-id ${AMI_ID} --count 1 --instance-type t2.micro --key-name ${SSH_KEY} --security-group-ids ${SG1_ID} --subnet-id ${SN1_ID} | jq -r ".Instances[0].InstanceId")
+VM2_ID=$(aws ec2 run-instances --image-id ${AMI_ID} --count 1 --instance-type t2.micro --key-name ${SSH_KEY} --security-group-ids ${SG2_ID} --subnet-id ${SN2_ID} | jq -r ".Instances[0].InstanceId")
+VM3_ID=$(aws ec2 run-instances --image-id ${AMI_ID} --count 1 --instance-type t2.micro --key-name ${SSH_KEY} --security-group-ids ${SG3_ID} --subnet-id ${SN3_ID} | jq -r ".Instances[0].InstanceId")
 
 # Tag EC2-instances:
 aws ec2 create-tags --resources ${VM1_ID} --tags Key=Name,Value=DMZ
 aws ec2 create-tags --resources ${VM2_ID} --tags Key=Name,Value=Internal
 aws ec2 create-tags --resources ${VM3_ID} --tags Key=Name,Value=Secure
 
+# Wait for the public IP to be assigned to the DMZ instance
 sleep 5
 
 # Generate ssh config file with IPs
@@ -97,18 +102,18 @@ VM3_IP=$(aws ec2 describe-instances --instance-ids ${VM3_ID} | jq -r ".Reservati
 cat << EOT > ~/.ssh/config
 Host bastion
   Hostname $VM1_IP
-  IdentityFile ~/.ssh/aws_london_mac.pem
+  IdentityFile ~/.ssh/$SSH_KEY.pem
   User ec2-user
 
 Host internal
   Hostname $VM2_IP
-  IdentityFile ~/.ssh/aws_london_mac.pem
+  IdentityFile ~/.ssh/$SSH_KEY.pem
   User ec2-user
   ProxyCommand ssh bastion -W %h:%p
 
 Host secure
   Hostname $VM3_IP
-  IdentityFile ~/.ssh/aws_london_mac.pem
+  IdentityFile ~/.ssh/$SSH_KEY.pem
   User ec2-user
   ProxyCommand ssh bastion -W %h:%p
 EOT
