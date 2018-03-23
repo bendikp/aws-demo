@@ -45,6 +45,14 @@ sudo pip install ansible
 sudo pip install boto3 --ignore-installed six
 sudo pip install botocore --ignore-installed six
 ```
+Update `vars.yml` with the AWS region you want to deploy to and what SSH key pair to use to connect to the EC2 instances,
+```
+REGION=<region>
+SSH_KEY=<ssh-key>
+sed -i -e 's/\(^aws_region:\)\(.*\)\(".*"\)/\1\2"'"${REGION}"'"/' vars.yml
+sed -i -e 's/\(^ssh_key:\)\(.*\)\(".*"\)/\1\2"'"${SSH_KEY}"'"/' vars.yml
+```
+or edit the file manually :)
 
 ### Run
 Export AWS access key:
