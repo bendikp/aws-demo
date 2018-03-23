@@ -7,8 +7,8 @@ Simple AWS demo to set up the following components in an AWS Region:
 * NAT Gateway
 * Route Tables
 * Security Groups
-* EC2 instance in each subnet
-* SSH-config to connet to EC2 instances
+* One EC2 instance in each subnet
+* SSH-config to connect to EC2 instances
 
 ![Diagram](aws-diagram_2.png)
 
